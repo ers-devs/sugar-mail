@@ -5,7 +5,9 @@ Created on 3 Sep 2012
 '''
 import gtk
 from GUI import MainWindow
+from Model import Messages
 
 if __name__ == '__main__':
-		main = MainWindow()
-		gtk.main()
+	model = Messages()
+	main = MainWindow(model)
+	gtk.main()
