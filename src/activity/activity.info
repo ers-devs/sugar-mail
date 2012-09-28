@@ -1,0 +1,9 @@
+[Activity]
+name = Mail
+service_name = nl.vu.MailActivity
+icon = mail
+exec = sugar-activity MailActivity.MailActivity
+show_launcher = yes
+activity_version = 1
+mime_types = text/plain
+license = GPLv2+

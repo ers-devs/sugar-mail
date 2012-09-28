@@ -13,7 +13,7 @@ class Contacts(object):
 		
 		model = gtk.TreeStore(gobject.TYPE_STRING)
 		view = gtk.TreeView(model)
-		viewcolumn = gtk.TreeViewColumn('Filter sender')
+		viewcolumn = gtk.TreeViewColumn('Visibility')
 		view.append_column(viewcolumn)
 		cell = gtk.CellRendererText()
 		viewcolumn.pack_start(cell, True)
@@ -24,7 +24,7 @@ class Contacts(object):
 		scrollable.set_border_width(2)
 		self._widget = scrollable
 		
-		model.append(None, ['Everyone'])
+		model.append(None, ['Public'])
 		
 	def get_widget(self):
 		self._widget.show_all()
@@ -105,30 +105,23 @@ class MainWindow(object):
 		self._messages = Messages(self)
 		self._post = Post(self)
 		
-		# Create the Window
-		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-		self.window.connect("destroy", self.destroy_cb)
-		self.window.set_border_width(style.DEFAULT_PADDING)
-		self.window.set_size_request(600, 450)
-		self.window.set_position(gtk.WIN_POS_CENTER)
-
-		main_box = gtk.HBox()
-		main_box.pack_start(self._contacts.get_widget(), expand=False, fill=True)
+		self._widget = gtk.HBox()
+		self._widget.pack_start(self._contacts.get_widget(), expand=False, fill=True)
 		right_box = gtk.VBox()
 		right_box.pack_start(self._messages.get_widget(), expand=True, fill=True)
 		right_box.pack_end(self._post.get_widget(), expand=False, fill=True)
-		main_box.pack_end(right_box, expand=True, fill=True)
-
-		# Pack everything
-		self.window.add(main_box)
-		self.window.show_all()
+		self._widget.pack_end(right_box, expand=True, fill=True)
 
 		# Refresh the display
 		self.refresh_messages()
-			
-	def destroy_cb(self, widget, event=None):
-		gtk.main_quit()
 		
+		# Add a timer to refresh the display from time to time
+		self._timer = gobject.timeout_add(5000, self.refresh_messages)
+	
+	def get_widget(self):
+		self._widget.show_all()
+		return self._widget
+			
 	def post_message(self, message):
 		'''
 		Function called by the UI component to post a message
@@ -146,3 +139,5 @@ class MainWindow(object):
 		messages = self._model.get_messages()
 		# Update the list
 		self._messages.set_list(messages)
+		# Return True so that the timer continues to refresh
+		return True
