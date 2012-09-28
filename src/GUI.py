@@ -13,7 +13,7 @@ class Contacts(object):
 		
 		model = gtk.TreeStore(gobject.TYPE_STRING)
 		view = gtk.TreeView(model)
-		viewcolumn = gtk.TreeViewColumn('Contacts')
+		viewcolumn = gtk.TreeViewColumn('Filter sender')
 		view.append_column(viewcolumn)
 		cell = gtk.CellRendererText()
 		viewcolumn.pack_start(cell, True)
@@ -25,7 +25,6 @@ class Contacts(object):
 		self._widget = scrollable
 		
 		model.append(None, ['Everyone'])
-		model.append(None, ['Toto'])
 		
 	def get_widget(self):
 		self._widget.show_all()
@@ -36,21 +35,32 @@ class Messages(object):
 	def __init__(self, parent):
 		self._parent = parent
 		
-		model = gtk.ListStore(gobject.TYPE_STRING)
-		view = gtk.IconView(model)
-		view.set_text_column(0)
+		self._model = gtk.TreeStore(gobject.TYPE_STRING)
+		view = gtk.TreeView(self._model)
+		viewcolumn = gtk.TreeViewColumn('Messages')
+		view.append_column(viewcolumn)
+		cell = gtk.CellRendererText()
+		viewcolumn.pack_start(cell, True)
+		viewcolumn.add_attribute(cell, 'text', 0)
 		scrollable = gtk.ScrolledWindow()
 		scrollable.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
 		scrollable.add(view)
 		scrollable.set_border_width(2)
 		self._widget = scrollable
 		
-		model.append(['Bonjour!'])
 		
 	def get_widget(self):
 		self._widget.show_all()
 		return self._widget
 
+	def set_list(self, messages):
+		'''
+		Set a new content for the list of messages
+		'''
+		self._model.clear()
+		for message in messages:
+			self._model.append(None, [message])
+		
 class Post(object):
 	'''
 	Interface for posting a new message
@@ -98,7 +108,6 @@ class MainWindow(object):
 		# Create the Window
 		self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
 		self.window.connect("destroy", self.destroy_cb)
-		#self.window.connect("key-press-event", self.keypress_cb)
 		self.window.set_border_width(style.DEFAULT_PADDING)
 		self.window.set_size_request(600, 450)
 		self.window.set_position(gtk.WIN_POS_CENTER)
@@ -113,11 +122,10 @@ class MainWindow(object):
 		# Pack everything
 		self.window.add(main_box)
 		self.window.show_all()
-	
-	def keypress_cb(self, widget, event):
-		if event.keyval == gtk.keysyms.Escape or event.keyval == gtk.keysyms.Return :
-			gtk.main_quit()
-	
+
+		# Refresh the display
+		self.refresh_messages()
+			
 	def destroy_cb(self, widget, event=None):
 		gtk.main_quit()
 		
@@ -128,4 +136,13 @@ class MainWindow(object):
 		# Post the message
 		self._model.post(message)
 		# Refresh the display
-	
+		self.refresh_messages()
+		
+	def refresh_messages(self):
+		'''
+		Function called to refresh the messages list
+		'''
+		# Get the messages
+		messages = self._model.get_messages()
+		# Update the list
+		self._messages.set_list(messages)
