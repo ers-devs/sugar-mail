@@ -1,6 +1,6 @@
 [Activity]
 name = Mail
-service_name = nl.vu.MailActivity
+bundle_id = nl.vu.MailActivity
 icon = mail
 exec = sugar-activity MailActivity.MailActivity
 show_launcher = yes
