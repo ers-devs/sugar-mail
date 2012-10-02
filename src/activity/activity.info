@@ -2,7 +2,7 @@
 name = Mail
 bundle_id = nl.vu.MailActivity
 icon = mail
-exec = sugar-activity MailActivity.MailActivity
+exec = sugar-activity activity.MailActivity
 show_launcher = yes
 activity_version = 1
 mime_types = text/plain
