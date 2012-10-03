@@ -5,7 +5,6 @@ Created on 3 Sep 2012
 '''
 import gtk
 import gobject
-from sugar.graphics import style
 
 class Contacts(object):
 	def __init__(self, parent):
@@ -101,16 +100,12 @@ class MainWindow(object):
 		Constructor
 		'''
 		self._model = model
-		self._contacts = Contacts(self)
 		self._messages = Messages(self)
 		self._post = Post(self)
 		
-		self._widget = gtk.HBox()
-		self._widget.pack_start(self._contacts.get_widget(), expand=False, fill=True)
-		right_box = gtk.VBox()
-		right_box.pack_start(self._messages.get_widget(), expand=True, fill=True)
-		right_box.pack_end(self._post.get_widget(), expand=False, fill=True)
-		self._widget.pack_end(right_box, expand=True, fill=True)
+		self._widget = gtk.VBox()
+		self._widget.pack_start(self._messages.get_widget(), expand=True, fill=True)
+		self._widget.pack_end(self._post.get_widget(), expand=False, fill=True)
 
 		# Refresh the display
 		self.refresh_messages()
