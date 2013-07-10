@@ -4,7 +4,7 @@ Created on 15 Sep 2012
 @author: cgueret
 '''
 import uuid
-import ers
+import time
 from sugar import profile
 from rdflib import Literal, Namespace
 from ers import ERSLocal
@@ -28,16 +28,17 @@ class Messages(object):
         self.registry.add_data(uid, "author", Literal(profile.get_nick_name()), "g1")
         self.registry.add_data(uid, "share", OLPC_RESOURCE['public'], "g1")
         self.registry.add_data(uid, "category", "Message", "g1")
+        self.registry.add_data(uid, "time", time.time(), "g1")
     
     def get_messages(self):
         '''
         Get the list of messages currently stored locally
         '''
         messages = []
-
         for (entity, graph) in self.registry.search("category", "Message"):
             data = self.registry.get_data(entity, graph)
             message = ', '.join(data['message'])
             author = ', '.join(data['author'])
-            messages.append("%s (from: %s)" % (message, author))
-        return messages
+            timestamp = data['time'][-1]
+            messages.append((timestamp, "{0} (from: {1})".format(message, author)))
+        return [m for d, m in sorted(messages)]
