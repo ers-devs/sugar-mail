@@ -36,9 +36,12 @@ class Messages(object):
         '''
         messages = []
         for (entity, graph) in self.registry.search("category", "Message"):
-            data = self.registry.get_data(entity, graph)
-            message = ', '.join(data['message'])
-            author = ', '.join(data['author'])
-            timestamp = data['time'][-1]
-            messages.append((timestamp, "{0} (from: {1})".format(message, author)))
+            try:
+                data = self.registry.get_annotation(entity)
+                message = ', '.join(data['message'])
+                author = ', '.join(data['author'])
+                timestamp = data['time'][-1]
+                messages.append((timestamp, "{0} (from: {1})".format(message, author)))
+            except Exception as e:
+                messages.append((0, "fail {0}".format(e)))
         return [m for d, m in sorted(messages)]
