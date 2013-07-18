@@ -36,6 +36,7 @@ class Messages(object):
         
         self._model = gtk.TreeStore(gobject.TYPE_STRING)
         view = gtk.TreeView(self._model)
+        view.set_rules_hint( True )
         viewcolumn = gtk.TreeViewColumn('Messages')
         view.append_column(viewcolumn)
         cell = gtk.CellRendererText()
