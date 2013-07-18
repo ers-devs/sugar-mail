@@ -123,6 +123,8 @@ class MainWindow(object):
         '''
         # Post the message
         self._model.post(message)
+        # Clear messasge input field
+        self._post._text.set_text("")
         # Refresh the display
         self.refresh_messages()
         
