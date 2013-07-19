@@ -5,6 +5,7 @@ Created on 3 Sep 2012
 '''
 import gtk
 import gobject
+from textwrap import wrap
 
 class Contacts(object):
     def __init__(self, parent):
@@ -36,7 +37,7 @@ class Messages(object):
         
         self._model = gtk.TreeStore(gobject.TYPE_STRING)
         view = gtk.TreeView(self._model)
-        view.set_rules_hint( True )
+        view.set_rules_hint(True)
         viewcolumn = gtk.TreeViewColumn('Messages')
         view.append_column(viewcolumn)
         cell = gtk.CellRendererText()
@@ -59,6 +60,7 @@ class Messages(object):
         '''
         self._model.clear()
         for message in messages:
+            message = '\n'.join(wrap(message, 70))
             self._model.append(None, [message])
         
 class Post(object):
