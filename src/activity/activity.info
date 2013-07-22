@@ -1,8 +1,8 @@
 [Activity]
-name = Mail
-bundle_id = nl.vu.MailActivity
+name = Messages
+bundle_id = nl.vu.MessagesActivity
 icon = mail
-exec = sugar-activity activity.MailActivity
+exec = sugar-activity activity.MessagesActivity
 show_launcher = yes
 activity_version = 1
 mime_types = text/plain

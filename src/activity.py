@@ -8,9 +8,9 @@ from GUI import MainWindow
 from Model import Messages
 import logging
 
-logger = logging.getLogger('mail-activity')
+logger = logging.getLogger('messages-activity')
 
-class MailActivity(activity.Activity):
+class MessagesActivity(activity.Activity):
     def __init__(self, handle):
         # Init
         activity.Activity.__init__(self, handle)
